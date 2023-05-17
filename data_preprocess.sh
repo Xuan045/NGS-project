@@ -42,7 +42,7 @@ java -Xmx48g -jar ${PICARD} SortSam \
     INPUT=${ID}_${ref_ver}_bwamem.bam \
     OUTPUT=${ID}_${ref_ver}_bwamem.sorted.bam \
     SORT_ORDER="coordinate" \
-	CREATE_INDEX=true \
+    CREATE_INDEX=true \
     VALIDATION_STRINGENCY=LENIENT
 
 #####################
