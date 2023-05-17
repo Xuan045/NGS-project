@@ -20,7 +20,7 @@ dbSNP=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/dbsnp
 
 # Tools
 tool_dir=/opt/ohpc/Taiwania3/pkg/biology
-GATK=${tool_dir}/GATK/gatk_v4.2.3.0
+GATK4=${tool_dir}/GATK/gatk_v4.2.3.0
 PICARD=${tool_dir}/Picard/picard_v2.26.0/picard.jar
 BWA=${tool_dir}/BWA/BWA_v0.7.17/bwa
 SAMTOOLS=${tool_dir}/SAMTOOLS/samtools_v1.15.1/bin/samtools
