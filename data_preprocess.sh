@@ -27,9 +27,8 @@ SAMTOOLS=${tool_dir}/SAMTOOLS/samtools_v1.15.1/bin/samtools
 
 # Setup
 TIME=`date +%Y%m%d%H%M`
-logfile=./${TIME}_${ID}_run_hg38.log
-exec 3<&1 4<&2
-exec >$logfile 2>&1
+logfile=./${TIME}_${ID}_run_preprocess.log
+exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
 
 #####################
@@ -38,7 +37,7 @@ set -euo pipefail
 ref_ver=hg38
 ${BWA} mem -t 16 -R '@RG\tID:'${ID}'_'${ref_ver}'_bwamem\tLB:'${ID}'_'${ref_ver}'_bwamem\tSM:'${ID}'_'${ref_ver}'_bwamem\tPL:ILLUMINA\' ${HG38} ${R1} ${R2} > ${ID}_${ref_ver}_bwamem.bam
 
-java -Xmx48g -jar ${PICARD} SortSam \
+java -Xmx92g -jar ${PICARD} SortSam \
     INPUT=${ID}_${ref_ver}_bwamem.bam \
     OUTPUT=${ID}_${ref_ver}_bwamem.sorted.bam \
     SORT_ORDER="coordinate" \
@@ -48,7 +47,7 @@ java -Xmx48g -jar ${PICARD} SortSam \
 #####################
 # Data preprocess
 #####################
-java -Xmx48g -jar ${PICARD} MarkDuplicates \
+java -Xmx92g -jar ${PICARD} MarkDuplicates \
     INPUT=${ID}_${ref_ver}_bwamem.sorted.bam \
     OUTPUT=${ID}_${ref_ver}_bwamem.markdup.bam \
     METRICS_FILE=${ID}_${ref_ver}_bwamem.markdup.metrics \
@@ -57,10 +56,10 @@ java -Xmx48g -jar ${PICARD} MarkDuplicates \
 
 ${GATK4}/gatk BaseRecalibrator \
     -R ${HG38} \
-    -knownSites ${dbSNP} \
+    --known-sites ${dbSNP} \
     -I ${ID}_${ref_ver}_bwamem.markdup.bam \
     -o ${ID}_${ref_ver}_bwamem.markdup.recal_data.grp \
-    -rf BadCigar \
+    -RF BadCigar \
     -nct 16
 
 ${GATK4}/gatk PrintReads \
@@ -70,7 +69,7 @@ ${GATK4}/gatk PrintReads \
     -o ${ID}_${ref_ver}_bwamem.markdup.recal.bam \
     -nct 16
 
-java -Xmx48g -jar ${PICARD} SortSam \
+java -Xmx92g -jar ${PICARD} SortSam \
     INPUT=${ID}_${ref_ver}_bwamem.markdup.recal.bam \
     OUTPUT=${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam \
     SORT_ORDER=coordinate \
