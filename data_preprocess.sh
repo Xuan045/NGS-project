@@ -36,7 +36,7 @@ set -euo pipefail
 # BWA alignment
 #####################
 ref_ver=hg38
-${BWA} mem -t 16 -R '@RG\tID:'${ID}'_'${ref_ver}'_PL:ILLUMINA\' ${HG38} ${R1} ${R2} > ${ID}_${ref_ver}_bwamem.bam
+${BWA} mem -t 16 -R '@RG\tID:'${ID}'_'${ref_ver}'_bwamem\tLB:'${ID}'_'${ref_ver}'_bwamem\tSM:'${ID}'_'${ref_ver}'_bwamem\tPL:ILLUMINA\' ${HG38} ${R1} ${R2} > ${ID}_${ref_ver}_bwamem.bam
 
 java -Xmx48g -jar ${PICARD} SortSam \
     INPUT=${ID}_${ref_ver}_bwamem.bam \
