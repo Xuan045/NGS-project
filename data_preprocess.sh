@@ -55,47 +55,28 @@ java -Xmx48g -jar ${PICARD} MarkDuplicates \
     VALIDATION_STRINGENCY=LENIENT \
     CREATE_INDEX=true
 
-${GATK4}/gatk RealignerTargetCreator \
-    -R ${HG38} \
-    -I ${ID}_${ref_ver}_bwamem.markdup.bam \
-    -o ${ID}_${ref_ver}_bwamem.markdup.bam.intervals \
-    -nt 16
-
-${GATK4}/gatk IndelRealigner \
-    -R ${HG38} \
-    -I ${ID}_${ref_ver}_bwamem.markdup.bam \
-    -targetIntervals ${ID}_${ref_ver}_bwamem.markdup.bam.intervals \
-    -o ${ID}_${ref_ver}_bwamem.markdup.realigned.bam
-
-java -Xmx48g -jar ${PICARD} FixMateInformation \
-    INPUT=${ID}_${ref_ver}_bwamem.markdup.realigned.bam \
-    OUTPUT=${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.bam \
-    SO=coordinate \
-    VALIDATION_STRINGENCY=LENIENT \
-    CREATE_INDEX=true
-
 ${GATK4}/gatk BaseRecalibrator \
     -R ${HG38} \
     -knownSites ${dbSNP} \
-    -I ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.bam \
-    -o ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal_data.grp \
+    -I ${ID}_${ref_ver}_bwamem.markdup.bam \
+    -o ${ID}_${ref_ver}_bwamem.markdup.recal_data.grp \
     -rf BadCigar \
     -nct 16
 
 ${GATK4}/gatk PrintReads \
     -R ${HG38} \
-    -I ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.bam \
-    -BQSR ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal_data.grp \
-    -o ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.bam \
+    -I ${ID}_${ref_ver}_bwamem.markdup.bam \
+    -BQSR ${ID}_${ref_ver}_bwamem.markdup.recal_data.grp \
+    -o ${ID}_${ref_ver}_bwamem.markdup.recal.bam \
     -nct 16
 
 java -Xmx48g -jar ${PICARD} SortSam \
-    INPUT=${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.bam \
-    OUTPUT=${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.indexed.bam \
+    INPUT=${ID}_${ref_ver}_bwamem.markdup.recal.bam \
+    OUTPUT=${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam \
     SORT_ORDER=coordinate \
     VALIDATION_STRINGENCY=LENIENT \
     CREATE_INDEX=true
 
 # To output in cram format
-${SAMTOOLS} view -C -T ${HG38} ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.indexed.bam  > ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.indexed.cram
-${SAMTOOLS} index ${ID}_${ref_ver}_bwamem.markdup.realigned.fixed.recal.indexed.cram
+${SAMTOOLS} view -C -T ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam  > ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.cram
+${SAMTOOLS} index ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.cram
