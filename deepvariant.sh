@@ -39,3 +39,5 @@ singularity run --nv -B ${workdir}:${workdir} \
     --output_vcf=${workdir}/${ID}.${ref_ver}.DeepVariant.vcf.gz \
     --output_gvcf=${workdir}/${ID}.${ref_ver}.DeepVariant.gvcf.gz \
     --num_shards=4
+
+rm ${HG38} ${HG38}.fai
