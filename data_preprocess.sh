@@ -77,6 +77,16 @@ java -Xmx48g -jar ${PICARD} SortSam \
     VALIDATION_STRINGENCY=LENIENT \
     CREATE_INDEX=true
 
-# To output in cram format
-${SAMTOOLS} view -C -T ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam  > ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.cram
-${SAMTOOLS} index ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.cram
+##########################################
+# Germline variant calling by GATK HC
+##########################################
+${GATK4}/gatk HaplotypeCaller \
+    -R ${HG38} \
+    -I ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam \
+    -o ${ID}_${ref_ver}_bwamem.HC.g.vcf.gz \
+    -ERC GVCF \
+    --variant_index_type LINEAR \
+    --variant_index_parameter 128000 \
+    --dbsnp ${dbSNP} \
+    --max_alternate_alleles 30 \
+    -nct 16
