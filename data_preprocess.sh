@@ -26,7 +26,7 @@ BWA=${tool_dir}/BWA/BWA_v0.7.17/bwa
 SAMTOOLS=${tool_dir}/SAMTOOLS/samtools_v1.15.1/bin/samtools
 
 # Setup
-TIME=`date +%Y%m%d%H%M`
+TIME=$(date +%Y%m%d%H%M)
 logfile=./${TIME}_${ID}_run_preprocess.log
 exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
@@ -58,21 +58,18 @@ ${GATK4}/gatk BaseRecalibrator \
     -R ${HG38} \
     --known-sites ${dbSNP} \
     -I ${ID}_${ref_ver}_bwamem.markdup.bam \
-    -o ${ID}_${ref_ver}_bwamem.markdup.recal_data.grp \
-    -RF BadCigar \
-    -nct 16
+    -O ${ID}_${ref_ver}_bwamem.markdup.recal_data.table \
 
-${GATK4}/gatk PrintReads \
+${GATK4}/gatk ApplyBQSR \
     -R ${HG38} \
     -I ${ID}_${ref_ver}_bwamem.markdup.bam \
-    -BQSR ${ID}_${ref_ver}_bwamem.markdup.recal_data.grp \
-    -o ${ID}_${ref_ver}_bwamem.markdup.recal.bam \
-    -nct 16
+    -bqsr ${ID}_${ref_ver}_bwamem.markdup.recal_data.table \
+    -O ${ID}_${ref_ver}_bwamem.markdup.recal.bam
 
 java -Xmx92g -jar ${PICARD} SortSam \
     INPUT=${ID}_${ref_ver}_bwamem.markdup.recal.bam \
     OUTPUT=${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam \
-    SORT_ORDER=coordinate \
+    SORT_ORDER="coordinate" \
     VALIDATION_STRINGENCY=LENIENT \
     CREATE_INDEX=true
 
@@ -82,10 +79,5 @@ java -Xmx92g -jar ${PICARD} SortSam \
 ${GATK4}/gatk HaplotypeCaller \
     -R ${HG38} \
     -I ${ID}_${ref_ver}_bwamem.markdup.recal.sorted.bam \
-    -o ${ID}_${ref_ver}_bwamem.HC.g.vcf.gz \
-    -ERC GVCF \
-    --variant_index_type LINEAR \
-    --variant_index_parameter 128000 \
-    --dbsnp ${dbSNP} \
-    --max_alternate_alleles 30 \
-    -nct 16
+    -O ${ID}_${ref_ver}_bwamem.HC.g.vcf.gz \
+    -ERC GVCF
