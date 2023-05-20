@@ -15,10 +15,12 @@ cd $download_dir
 for ((i = 1; i < ${#lines[@]}; i++)); do
     # Extract the last column from the line
     line=${lines[$i]}
-    sample_name=$(echo "$line" | awk -F',' '{print $NF}')
+    sample_name=$(echo "$line" | awk -F',' '{print $NF}' | tr -d '\r\n')
 
     # Download files using SRAToolkit fastq-dump (download as fastq format and split into R1 and R2)
     fastq-dump --split-files $sample_name
+#    prefetch $sample_name
+    wait
 
 done
 
