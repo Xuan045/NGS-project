@@ -27,6 +27,4 @@ while read -r ID;
     sed -i 's|SAMPLE_ID|'${ID}'|g' ./${DAY}_${ID}_${pipeline}.sh
     sbatch ./${DAY}_${ID}_${pipeline}.sh
 
-    cd ${wkdir}
-
     done<${SampleList}
