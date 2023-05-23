@@ -11,8 +11,8 @@
 
 wkdir=WKDIR
 ID=SAMPLE_ID
-R1=/staging/biology/u4432941/SRA/download_files/${ID}_1.fastq
-R2=/staging/biology/u4432941/SRA/download_files/${ID}_2.fastq
+R1=/staging/biology/u4432941/SRA/download_files/${ID}_1.fastq.gz
+R2=/staging/biology/u4432941/SRA/download_files/${ID}_2.fastq.gz
 
 # Reference path
 HG38=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_sapiens_assembly38.fasta
