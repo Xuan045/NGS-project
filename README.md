@@ -1,6 +1,6 @@
 # NGS-project
 
-# Pipelines
+## Variant calling pipelines
 
 1. GATK best practices
   - Data preprocessing was performed using GATK and Picard tools. For more detailed information, please refer to [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery)
