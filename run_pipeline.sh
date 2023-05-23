@@ -16,8 +16,10 @@ pipeline=$1
 PIPELINE="/staging/biology/u4432941/SRA/${pipeline}.sh"
 DAY=`date +%Y%m%d`
 
-while read -r ID;
-    do
+while IFS= read -r line; do
+    # Remove trailing carriage return (^M)
+    ID=$(echo $line | tr -d '\r')
+
     cd ${wkdir}
     mkdir -p ${ID}
     cd ${wkdir}/${ID}
@@ -27,4 +29,4 @@ while read -r ID;
     sed -i 's|SAMPLE_ID|'${ID}'|g' ./${DAY}_${ID}_${pipeline}.sh
     sbatch ./${DAY}_${ID}_${pipeline}.sh
 
-    done<${SampleList}
+done<${SampleList}
