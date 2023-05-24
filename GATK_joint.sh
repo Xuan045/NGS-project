@@ -7,9 +7,10 @@
 #SBATCH -o out.log          # Path to the standard output file
 #SBATCH -e err.log          # Path to the standard error ouput file
 #SBATCH --mail-user=judychou60@gmail.com
-#SBATCH --mail-type=FAIL              # 指定送出email時機 可為NONE, BEGIN, END, FAIL, REQUEUE, ALL
+#SBATCH --mail-type=END              # 指定送出email時機 可為NONE, BEGIN, END, FAIL, REQUEUE, ALL
 
 wkdir=/staging/biology/u4432941/SRA
+merge_vcf=/staging/biology/u4432941/SRA/output/IPAH_cohort.g.vcf.gz
 
 # Reference path
 HG38=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_sapiens_assembly38.fasta
@@ -27,23 +28,13 @@ logfile=./${TIME}_${ID}_run_gatkHC.log
 exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
 
-##########################
-# Consollidate GVCF
-##########################
-# Prepare sample list
-touch=ipah_sample.list
-echo "$(realpath )" >> ipah_sample.list
-
-java -Xmx92g -jar ${PICARD} MergeVcfs \
-	I=ipah_sample.list \
-	O=ipah_bwamem.gatkHC.merge.vcf.gz
 
 ###########################
 # Perform joint genotyping
 ###########################
 ${GATK4}/gatk GenotypeGVCFs \
 	-R ${HG38} \
-	-V ipah_bwamem.gatkHC.merge.vcf.gz \
+	-V ${merge_vcf} \
 	-O ipah_bwamem.gatkHC.merge.joint.vcf.gz
 
 ###################
