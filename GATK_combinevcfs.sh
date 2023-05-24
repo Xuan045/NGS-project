@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 #SBATCH -A MST109178        # Account name/project number
-#SBATCH -J NGS_GDB         # Job name
+#SBATCH -J NGS_CombineVcfs         # Job name
 #SBATCH -p ngs53G           # Partition Name 等同PBS裡面的 -q Queue name
 #SBATCH -c 8               # 使用的core數 請參考Queue資源設定
 #SBATCH --mem=53g           # 使用的記憶體量 請參考Queue資源設定
@@ -31,8 +31,8 @@ set -euo pipefail
 # Consollidate GVCF
 ##########################
 ${GATK4}/gatk CombineGVCFs \
-    -R ${HG38}
-	--variant /staging/biology/u4432941/SRA/output/SRR18670381/SRR18670381_hg38_bwamem.HC.g.vcf.gz \
+    -R ${HG38} \
+    --variant /staging/biology/u4432941/SRA/output/SRR18670381/SRR18670381_hg38_bwamem.HC.g.vcf.gz \
     --variant /staging/biology/u4432941/SRA/output/SRR18670382/SRR18670382_hg38_bwamem.HC.g.vcf.gz \
     --variant /staging/biology/u4432941/SRA/output/SRR18670383/SRR18670383_hg38_bwamem.HC.g.vcf.gz \
     --variant /staging/biology/u4432941/SRA/output/SRR18670384/SRR18670384_hg38_bwamem.HC.g.vcf.gz \
@@ -77,4 +77,4 @@ ${GATK4}/gatk CombineGVCFs \
     --variant /staging/biology/u4432941/SRA/output/SRR18670423/SRR18670423_hg38_bwamem.HC.g.vcf.gz \
     --variant /staging/biology/u4432941/SRA/output/SRR18670424/SRR18670424_hg38_bwamem.HC.g.vcf.gz \
     --variant /staging/biology/u4432941/SRA/output/SRR18670425/SRR18670425_hg38_bwamem.HC.g.vcf.gz \
-	--O ${wkdir}/IPAH_cohort.g.vcf.gz
+    --O ${wkdir}/IPAH_cohort.g.vcf.gz
