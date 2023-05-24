@@ -27,9 +27,9 @@ logfile=./${TIME}_${ID}_run_gatkHC.log
 exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
 
-#############
-# Merge GVCF
-#############
+##########################
+# Consollidate GVCF
+##########################
 # Prepare sample list
 touch=ipah_sample.list
 echo "$(realpath )" >> ipah_sample.list
