@@ -25,7 +25,7 @@ SAMTOOLS=${tool_dir}/SAMTOOLS/samtools_v1.15.1/bin/samtools
 
 # Setup
 TIME=$(date +%Y%m%d%H%M)
-logfile=./${TIME}_${ID}_run_gatkHC.log
+logfile=./${TIME}_run_gatkGDB.log
 exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
 
