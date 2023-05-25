@@ -9,7 +9,7 @@
 #SBATCH --mail-user=judychou60@gmail.com
 #SBATCH --mail-type=END              # 指定送出email時機 可為NONE, BEGIN, END, FAIL, REQUEUE, ALL
 
-wkdir=/staging/biology/u4432941/SRA
+wkdir=/staging/biology/u4432941/SRA/output
 merge_vcf=/staging/biology/u4432941/SRA/output/IPAH_cohort.g.vcf.gz
 
 # Reference path
@@ -24,7 +24,7 @@ SAMTOOLS=${tool_dir}/SAMTOOLS/samtools_v1.15.1/bin/samtools
 
 # Setup
 TIME=$(date +%Y%m%d%H%M)
-logfile=./${TIME}_${ID}_run_gatkHC.log
+logfile=./${TIME}_run_gatkGC.log
 exec > >(tee -a "$logfile") 2>&1
 set -euo pipefail
 
@@ -35,15 +35,15 @@ set -euo pipefail
 ${GATK4}/gatk GenotypeGVCFs \
 	-R ${HG38} \
 	-V ${merge_vcf} \
-	-O ipah_bwamem.gatkHC.merge.joint.vcf.gz
+	-O ${wkdir}/ipah_bwamem.gatkHC.merge.joint.vcf.gz
 
 ###################
 # Filter variants
 ###################
 ${GATK4}/gatk VariantFiltration \
 	-R ${HG38} \
-	-V ipah_bwamem.gatkHC.merge.joint.vcf.gz \
-	-O ipah_bwamem.gatkHC.merge.joint.filtered.vcf.gz \
+	-V ${wkdir}/ipah_bwamem.gatkHC.merge.joint.vcf.gz \
+	-O ${wkdir}/ipah_bwamem.gatkHC.merge.joint.filtered.vcf.gz \
 	--filter-expression "DP < 5" \
 	--filter-name "LowCoverage" \
 	--filter-expression "DP >= 5 && DP < 30" \
