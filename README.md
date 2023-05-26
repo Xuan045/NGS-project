@@ -11,7 +11,7 @@
 2. [Google DeepVariant](https://github.com/google/deepvariant)
 
   - Per sample variants were called in GVCF mode.
-  - Per sample GVCF files were merged using Picard MergeVcfs.
-  
+  - Per sample GVCF files were merged using [GLnexus](https://github.com/dnanexus-rnd/GLnexus).
+  - We follow [Best practices for multi-sample variant calling with DeepVariant (WES trio demonstration)](https://github.com/google/deepvariant/blob/r0.9/docs/trio-merge-case-study.md) to perform the multi-sample variant calling.
 
 
