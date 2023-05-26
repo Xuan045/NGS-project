@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH -A MST109178        # Account name/project number
 #SBATCH -J CombineDeepVariant      # Job name
-#SBATCH -p ngs1gpu           # Partition Name
-#SBATCH -c 6               # core preserved
-#SBATCH --mem=90G           # memory used
-#SBATCH --gres=gpu:1        # 使用的GPU數 請參考Queue資源設定
+#SBATCH -p ngs92G           # Partition Name 等同PBS裡面的 -q Queue name
+#SBATCH -c 14               # 使用的core數 請參考Queue資源設定 
+#SBATCH --mem=92g           # 使用的記憶體量 請參考Queue資源設定
+#SBATCH -o out.log          # Path to the standard output file 
+#SBATCH -e err.log          # Path to the standard error ouput file
 #SBATCH --mail-user=judychou60@gmail.com
-#SBATCH --mail-type=END
+#SBATCH --mail-type=ALL
 
 wkdir=/staging/biology/u4432941/SRA/output
 
@@ -15,8 +16,9 @@ HG38=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_s
 
 # Setup
 TIME=`date +%Y%m%d%H%M`
-logfile=./${TIME}_${ID}_run_glnexus_hg38.log
-exec > >(tee -a "$logfile") 2>&1
+logfile=./${TIME}_run_glnexus_hg38.log
+exec 3<&1 4<&2
+exec >$logfile 2>&1
 set -euo pipefail
 set -x
 
@@ -25,8 +27,8 @@ module load libs/singularity/3.10.2
 cp ${HG38} -t ${wkdir}
 cp ${HG38}.fai -t ${wkdir}
 
-singularity run --nv -B ${wkdir}:${wkdir} \
-    /opt/ohpc/Taiwania3/pkg/biology/GLnexus/glnexus_v1.4.1.sif \
+singularity run -B ${wkdir}:${wkdir} \
+    /staging/biology/u4432941/SRA/glnexus_v1.4.1.sif \
     /usr/local/bin/glnexus_cli \
     --config DeepVariantWGS \
     /staging/biology/u4432941/SRA/output/SRR18670381/SRR18670381.hg38.DeepVariant.gvcf.gz \
