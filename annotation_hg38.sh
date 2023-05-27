@@ -40,6 +40,3 @@ perl ${ANNOVAR} ${wkdir}/${para}.decom_hg38.norm.vcf.gz $humandb -buildver hg38 
 head -n 1 ${para}.hg38_multianno.txt > ${para}.filtered_annotation.txt
 grep -e exonic -e splicing ${para}.hg38_multianno.txt | grep -P -v "\tsynonymous" | grep -P -v "\tncRNA_exonic\t" >> ${para}.filtered_annotation.txt
 rm ${para}.avinput ${para}.decom_hg38.norm.vcf.gz ${para}.decom_hg38.vcf.gz ${para}.hg38_multianno.vcf
-
-
-rm ${para}.avinput ${para}.decom_hg38.norm.vcf.gz ${para}.decom_hg38.vcf.gz ${para}.hg38_multianno.vcf
