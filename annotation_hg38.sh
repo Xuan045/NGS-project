@@ -6,13 +6,13 @@
 #SBATCH --mem=186g           # 使用的記憶體量 請參考Queue資源設定
 #SBATCH -o IAPH_ANNOVAR.out.log          # Path to the standard output file
 #SBATCH -e IAPH_ANNOVAR.err.log          # Path to the standard error ouput file
-#SBATCH --mail-user=bobjackal@gmail.com    # email
+#SBATCH --mail-user=    # email
 #SBATCH --mail-type=FAIL              # 指定送出email時機 可為NONE, BEGIN, END, FAIL, REQUEUE, ALL
 
 ### Please define the following variables
-INPUT="/staging/biology/u4432941/SRA/output/ipah_bwamem.gatkHC.merge.joint.filtered.vcf.gz"
+INPUT="/staging/biology/u4432941/SRA/output/ipah_bwamem.deepvariant.cohort.vcf.gz"
 wkdir="/staging/biology/u4432941/SRA/output"
-para="IPAH_ANNOVAR_hg38"
+para="IPAH_deepvariant_ANNOVAR_hg38"
 
 ### DO NOT CHANGE
 REF=/staging/reserve/paylong_ntu/AI_SHARE/reference/GATK_bundle/2.8/hg38/Homo_sapiens_assembly38.fasta
